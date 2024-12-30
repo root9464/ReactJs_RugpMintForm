@@ -3,7 +3,7 @@ import { getCountdownValues } from '@/modules/FormBlock/funcs/TimerEvents';
 import { useTimeStore } from '@/modules/FormBlock/store/TIme';
 import { getLocale, Locale } from '@/shared/func/getLocale';
 import { Temporal } from '@js-temporal/polyfill';
-import { useEffect, useState } from 'react';
+import { Dispatch, SetStateAction, useEffect } from 'react';
 
 export type CountdownResult = {
   dateTime: string;
@@ -16,8 +16,13 @@ export type CountdownResult = {
   };
 };
 
-export const HeaderForm = () => {
-  const [countdownResult, setCountdownResult] = useState<CountdownResult | null>(null);
+export const HeaderForm = ({
+  countdownResult,
+  setCountdownResult,
+}: {
+  countdownResult: CountdownResult | null;
+  setCountdownResult: Dispatch<SetStateAction<CountdownResult | null>>;
+}) => {
   const { setTimeStatus } = useTimeStore();
 
   const { language } = useLanguageStore();
@@ -40,12 +45,6 @@ export const HeaderForm = () => {
     return () => clearInterval(intervalId);
   }, [lang, lang.events]);
 
-  const statusClasses: Record<string, string> = {
-    [lang.events.event1]: 'text-blue-700 font-semibold',
-    [lang.events.event2]: 'text-teal-700 font-semibold',
-    [lang.events.event3]: 'text-gray-700 font-semibold',
-  };
-
   useEffect(() => {
     if (countdownResult?.status === lang.events.event3 || countdownResult?.status === lang.events.event1) {
       setTimeStatus(countdownResult.status);
@@ -66,21 +65,37 @@ export const HeaderForm = () => {
     <div className='w-full h-auto font-russoOne'>
       {countdownResult && (
         <>
-          <div className='w-full h-fit text-lg flex flex-col justify-between items-end md:flex-row md:text-2xl md:items-center smoothness'>
-            <h3 className='smoothness'>{countdownResult.dateTime}</h3>
-            <h3 className={`${statusClasses[countdownResult.status]} smoothness`}>{countdownResult.status}:</h3>
-          </div>
-
-          <div className='w-full h-fit flex flex-row gap-x-2 justify-center mt-5 md:justify-center md:gap-x-[50px]'>
-            {Object.entries(localizedCountdown).map(([key, value]) => (
-              <div key={key} className='w-full h-fit flex flex-col justify-between text-center gap-y-2 smoothness'>
-                <h3 className='text-3xl lg:text-[50px] smoothness font-semibold'>{value}</h3>
-                <p className='text-xl text-[#121214] md:text-2xl smoothness'>{key}</p>
-              </div>
-            ))}
-          </div>
+          <TimerEvents localizedCountdown={localizedCountdown} />
         </>
       )}
     </div>
   );
 };
+
+export const Timer = ({
+  countdownResult,
+  statusClasses,
+}: {
+  countdownResult: CountdownResult | null;
+  statusClasses: Record<string, string>;
+}) => (
+  <>
+    {countdownResult && (
+      <div className='w-full h-fit text-lg flex flex-col justify-between items-end md:flex-row md:text-2xl md:items-center smoothness'>
+        <h3 className='smoothness'>{countdownResult.dateTime}</h3>
+        <h3 className={`${statusClasses[countdownResult.status]} smoothness`}>{countdownResult.status}:</h3>
+      </div>
+    )}
+  </>
+);
+
+const TimerEvents = ({ localizedCountdown }: { localizedCountdown: Record<string, number> }) => (
+  <div className='w-full h-fit flex flex-row gap-x-2 justify-center mt-5 md:justify-center md:gap-x-[50px]'>
+    {Object.entries(localizedCountdown).map(([key, value]) => (
+      <div key={key} className='w-full h-fit flex flex-col justify-between text-center gap-y-2 smoothness'>
+        <h3 className='text-3xl lg:text-[50px] smoothness font-semibold'>{value}</h3>
+        <p className='text-xl text-[#121214] md:text-2xl smoothness'>{key}</p>
+      </div>
+    ))}
+  </div>
+);

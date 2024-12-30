@@ -1,4 +1,3 @@
-import RomaniaFlagIcon from '@/assets/i.webp';
 import { TonConnectButton } from '@tonconnect/ui-react';
 import { Combobox } from './components/Combobox';
 import { FormBlock } from './modules/FormBlock/components/Form.module';
@@ -11,8 +10,6 @@ export default function App() {
       </div>
 
       <FormBlock />
-
-      <img src={RomaniaFlagIcon} className='rounded-lg' alt='' />
     </div>
   );
 }
