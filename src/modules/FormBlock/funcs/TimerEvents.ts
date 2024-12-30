@@ -1,4 +1,5 @@
 import { CountdownResult } from '@/modules/FormBlock/components/Header';
+import { Locale } from '@/shared/func/getLocale';
 import { Temporal } from '@js-temporal/polyfill';
 
 export const getCountdownValues = (
@@ -6,6 +7,7 @@ export const getCountdownValues = (
   startTime: Temporal.PlainTime,
   targetDate: Temporal.PlainDate,
   targetTime: Temporal.PlainTime,
+  lang: Locale,
 ): CountdownResult => {
   const moscowTimeZone = Temporal.TimeZone.from('Europe/Moscow');
   const now = Temporal.Now.plainDateTimeISO(moscowTimeZone);
@@ -35,19 +37,19 @@ export const getCountdownValues = (
     case 'start':
       return {
         dateTime: dateTimeString,
-        status: 'Before the event',
+        status: lang.events.event1,
         countdown: getDuration(startDateTime),
       };
     case 'countdown':
       return {
         dateTime: dateTimeString,
-        status: 'Until the event ends',
+        status: lang.events.event2,
         countdown: getDuration(targetDateTime),
       };
     case 'finished':
       return {
         dateTime: dateTimeString,
-        status: 'Event has ended',
+        status: lang.events.event3,
         countdown: {
           days: 0,
           hours: 0,

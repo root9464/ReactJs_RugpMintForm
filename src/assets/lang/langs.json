@@ -1,0 +1,47 @@
+{
+  "moldova": {
+    "days": "zile",
+    "hours": "ore",
+    "minutes": "minute",
+    "seconds": "secunde",
+    "amount": "Suma până la 10",
+    "error": "valoare introdusã invalidă",
+    "wallet": "conectare portofei",
+
+    "events": {
+      "event1": "Înainte de eveniment",
+      "event2": "Până când evenimentul se termină",
+      "event3": "Evenimentul s-a încheiat"
+    }
+  },
+  "russian": {
+    "days": "дней",
+    "hours": "часов",
+    "minutes": "минут",
+    "seconds": "секунд",
+    "amount": "Это число должно быть от 1 до 10",
+    "error": "неверное значение",
+    "wallet": "подключить кошелек",
+
+    "events": {
+      "event1": "До начала события",
+      "event2": "До конца события",
+      "event3": "Событие завершено"
+    }
+  },
+  "english": {
+    "days": "days",
+    "hours": "hours",
+    "minutes": "minutes",
+    "seconds": "seconds",
+    "amount": "This number must be from 1 to 10",
+    "error": "invalid value entered",
+    "wallet": "connect wallet",
+
+    "events": {
+      "event1": "Before the event",
+      "event2": "Until the event ends",
+      "event3": "Event has ended"
+    }
+  }
+}

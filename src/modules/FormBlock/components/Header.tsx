@@ -1,5 +1,7 @@
+import { useLanguageStore } from '@/components/Combobox';
 import { getCountdownValues } from '@/modules/FormBlock/funcs/TimerEvents';
 import { useTimeStore } from '@/modules/FormBlock/store/TIme';
+import { getLocale, Locale } from '@/shared/func/getLocale';
 import { Temporal } from '@js-temporal/polyfill';
 import { useEffect, useState } from 'react';
 
@@ -17,6 +19,12 @@ export type CountdownResult = {
 export const HeaderForm = () => {
   const [countdownResult, setCountdownResult] = useState<CountdownResult | null>(null);
   const { setTimeStatus } = useTimeStore();
+
+  // Получаем язык из хранилища
+  const { language } = useLanguageStore();
+  // Получаем локализованные строки
+  const lang = getLocale(language);
+
   useEffect(() => {
     const startDate = Temporal.PlainDate.from({ year: 2024, month: 12, day: 30 });
     const startTime = Temporal.PlainTime.from({ hour: 0, minute: 30 });
@@ -25,28 +33,37 @@ export const HeaderForm = () => {
     const targetTime = Temporal.PlainTime.from({ hour: 0, minute: 0 });
 
     const updateCountdown = () => {
-      setCountdownResult(getCountdownValues(startDate, startTime, targetDate, targetTime));
+      setCountdownResult(getCountdownValues(startDate, startTime, targetDate, targetTime, lang));
     };
 
     updateCountdown();
     const intervalId = setInterval(updateCountdown, 1000);
 
     return () => clearInterval(intervalId);
-  }, []);
+  }, [lang, lang.events]);
 
   const statusClasses: Record<string, string> = {
-    'Before the event': 'text-blue-700 font-semibold',
-    'Until the event ends': 'text-teal-700 font-semibold',
-    'Event has ended': 'text-gray-700 font-semibold',
+    [lang.events.event1]: 'text-blue-700 font-semibold',
+    [lang.events.event2]: 'text-teal-700 font-semibold',
+    [lang.events.event3]: 'text-gray-700 font-semibold',
   };
 
   useEffect(() => {
-    if (countdownResult?.status === 'Event has ended' || countdownResult?.status === 'Before the event') {
-      console.log(countdownResult?.status, 'time status');
-
+    if (countdownResult?.status === lang.events.event3 || countdownResult?.status === lang.events.event1) {
       setTimeStatus(countdownResult.status);
     }
-  }, [countdownResult?.status, setTimeStatus]);
+  }, [countdownResult, lang.events.event1, lang.events.event3, setTimeStatus]);
+
+  // Локализуем ключи для countdown (days, hours, minutes, seconds)
+  const localizedCountdown = countdownResult?.countdown
+    ? Object.entries(countdownResult.countdown).reduce((acc, [key, value]) => {
+        const localizedKey = lang[key as keyof Locale];
+        if (localizedKey) {
+          acc[localizedKey as keyof Locale] = value;
+        }
+        return acc;
+      }, {} as Record<string, number>)
+    : {};
 
   return (
     <div className='w-full h-auto font-russoOne'>
@@ -58,10 +75,10 @@ export const HeaderForm = () => {
           </div>
 
           <div className='w-full h-fit flex flex-row gap-x-2 justify-center mt-5 md:justify-center md:gap-x-[50px]'>
-            {Object.entries(countdownResult.countdown).map(([key, value]) => (
+            {Object.entries(localizedCountdown).map(([key, value]) => (
               <div key={key} className='w-full h-fit flex flex-col justify-between text-center gap-y-2 smoothness'>
                 <h3 className='text-3xl lg:text-[50px] smoothness font-semibold'>{value}</h3>
-                <p className='text-xl text-[#262626] md:text-2xl smoothness'>{key}</p>
+                <p className='text-xl text-[#121214] md:text-2xl smoothness'>{key}</p>
               </div>
             ))}
           </div>
