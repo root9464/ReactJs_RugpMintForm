@@ -20,9 +20,7 @@ export const HeaderForm = () => {
   const [countdownResult, setCountdownResult] = useState<CountdownResult | null>(null);
   const { setTimeStatus } = useTimeStore();
 
-  // Получаем язык из хранилища
   const { language } = useLanguageStore();
-  // Получаем локализованные строки
   const lang = getLocale(language);
 
   useEffect(() => {
@@ -54,7 +52,6 @@ export const HeaderForm = () => {
     }
   }, [countdownResult, lang.events.event1, lang.events.event3, setTimeStatus]);
 
-  // Локализуем ключи для countdown (days, hours, minutes, seconds)
   const localizedCountdown = countdownResult?.countdown
     ? Object.entries(countdownResult.countdown).reduce((acc, [key, value]) => {
         const localizedKey = lang[key as keyof Locale];
