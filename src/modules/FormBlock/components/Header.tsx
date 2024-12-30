@@ -24,10 +24,10 @@ export const HeaderForm = () => {
   const lang = getLocale(language);
 
   useEffect(() => {
-    const startDate = Temporal.PlainDate.from({ year: 2024, month: 12, day: 30 });
-    const startTime = Temporal.PlainTime.from({ hour: 0, minute: 30 });
+    const startDate = Temporal.PlainDate.from({ year: 2024, month: 12, day: 31 });
+    const startTime = Temporal.PlainTime.from({ hour: 0, minute: 0 });
 
-    const targetDate = Temporal.PlainDate.from({ year: 2025, month: 1, day: 15 });
+    const targetDate = Temporal.PlainDate.from({ year: 2025, month: 1, day: 1 });
     const targetTime = Temporal.PlainTime.from({ hour: 0, minute: 0 });
 
     const updateCountdown = () => {
