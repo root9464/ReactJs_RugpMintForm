@@ -14,7 +14,7 @@ export const BodyForm = () => {
   // цены на NFT
   const priceNft = 1;
 
-  const [tonConnectUI] = useTonConnectUI();
+  const [tonConnectUI] = useTonConnectUI(); // Хук для работы с TonConnect (подключение кошелька и отправка транзакций)
 
   const {
     register,
@@ -26,7 +26,17 @@ export const BodyForm = () => {
   });
 
   const valueInput = watch('value');
-
+  /**
+   * Обработчик отправки формы
+   * Технический процесс:
+   * 1. Формирует тело транзакции с помощью createBodyCellTransaction()
+   *    - Создает Cell с op-кодом 0xfcadf23 (mint)
+   *    - Упаковывает количество NFT и цену
+   * 2. Вызывает sendTransaction() из TonConnectUI
+   *    - TonConnect открывает окно кошелька (Tonkeeper, Wallet и т.д.)
+   *    - Кошелек парсит транзакцию, показывает пользователю сумму и контракт
+   *    - После подписи отправляет транзакцию в блокчейн TON
+   */
   const onSubmit: SubmitHandler<IForm> = async (data) => {
     const transaction = createBodyCellTransaction(priceNft, data.value);
     await tonConnectUI.sendTransaction(transaction);
